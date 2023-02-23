@@ -1,7 +1,12 @@
 name: dataprocessing
 channels:
-  - conda-forge
   - bioconda
+  - conda-forge
 dependencies:
   - python=3.10.9
   - snakemake=7.22.0
+  - bwa
+  - ca-certificates
+  - certifi
+  - openssl
+  - samtools
