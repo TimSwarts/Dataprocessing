@@ -1,0 +1,36 @@
+results = "results/"
+
+rule bwa_map:
+    input:
+        "data/genome.fa",
+        "data/samples/{sample}.fastq"
+    output:
+        "results/mapped_reads/{sample}.bam"
+    log:
+        "map_{sample}.log"
+    message: "executing bwa mem on the following {input} to generate the following {output}"
+    shell:
+        "bwa mem {input} | samtools view -Sb - > {output}"
+
+
+rule samtools_sort:
+    input:
+        "results/mapped_reads/{sample}.bam"
+    output:
+        "results/sorted_reads/{sample}.bam"
+    log:
+        "sort_{sample}.log"
+    shell:
+        "samtools sort -T results/sorted_reads/{wildcards.sample} "
+        "-O bam {input} > {output}"
+
+
+rule samtools_index:
+    input:
+        results + "sorted_reads/{sample}.bam"
+    output:
+        results + "sorted_reads/{sample}.bam.bai"
+    log:
+        "index_{sample}.log"
+    shell:
+        results + "samtools index {input}"
