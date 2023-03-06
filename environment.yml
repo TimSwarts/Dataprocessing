@@ -5,8 +5,5 @@ channels:
 dependencies:
   - python=3.10.9
   - snakemake=7.22.0
-  - bwa
-  - ca-certificates
-  - certifi
-  - openssl
-  - samtools
+  - bwa=0.7
+  - samtools=1.6
