@@ -1,4 +1,10 @@
-results = "results/"
+SAMPLES = ['A', 'B', 'C']
+
+
+rule all:
+    input:
+        "results/out.html"
+
 
 rule bwa_map:
     input:
@@ -7,7 +13,7 @@ rule bwa_map:
     output:
         "results/mapped_reads/{sample}.bam"
     log:
-        "map_{sample}.log"
+        "log/map_{sample}.log"
     message: "executing bwa mem on the following {input} to generate the following {output}"
     shell:
         "bwa mem {input} | samtools view -Sb - > {output}"
@@ -19,7 +25,7 @@ rule samtools_sort:
     output:
         "results/sorted_reads/{sample}.bam"
     log:
-        "sort_{sample}.log"
+        "log/sort_{sample}.log"
     shell:
         "samtools sort -T results/sorted_reads/{wildcards.sample} "
         "-O bam {input} > {output}"
@@ -27,10 +33,52 @@ rule samtools_sort:
 
 rule samtools_index:
     input:
-        results + "sorted_reads/{sample}.bam"
+        "results/sorted_reads/{sample}.bam"
     output:
-        results + "sorted_reads/{sample}.bam.bai"
+        "results/sorted_reads/{sample}.bam.bai"
     log:
-        "index_{sample}.log"
+        "log/index_{sample}.log"
     shell:
-        results + "samtools index {input}"
+        "samtools index {input}"
+
+
+rule bcftools_call:
+    input:
+        fa="data/genome.fa",
+        bam=expand("results/sorted_reads/{sample}.bam", sample=SAMPLES),
+        bai=expand("results/sorted_reads/{sample}.bam.bai", sample=SAMPLES)
+    output:
+        "results/calls/all.vcf"
+    shell:
+        "samtools mpileup -g -f {input.fa} {input.bam} | "
+        "bcftools call -mv - > {output}"
+
+
+rule report:
+    input:
+        "results/calls/all.vcf"
+    output:
+        "results/out.html"
+    message:
+        "Generating report '{output}' from '{input}'"
+    run:
+        from snakemake.utils import report
+        with open(input[0]) as f:
+            n_calls = sum(1 for line in f if not line.startswith("#"))
+
+        report(
+            """
+            An example workflow
+            ===================================
+
+            Reads were mapped to the Yeas reference genome 
+            and variants were called jointly with
+            SAMtools/BCFtools.
+
+            This resulted in {n_calls} variants (see Table T1_).
+            """,
+            output[0],
+            T1=input[0]
+        )
+
+
