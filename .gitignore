@@ -1,0 +1,8 @@
+# Ignore files and directories related to testing
+testing
+log
+*.log
+# Ignore snakemake cache and log files
+.snakemake
+# Ignore development environment files
+.idea
