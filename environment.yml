@@ -1,0 +1,7 @@
+name: dataprocessing
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.11
+  - snakemake=7.25.0
