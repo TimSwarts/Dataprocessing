@@ -1,0 +1,23 @@
+data_dir: "/students/2022-2023/Thema11/DataprocessingTim"
+genome: "Glycine_max_v4.fna"
+samples:
+  S01_R1: ./samples/01_1.fastq.gz
+  S01_R2: ./samples/01_2.fastq.gz
+  S02_R1: ./samples/02_1.fastq.gz
+  S02_R2: ./samples/02_2.fastq.gz
+  S03_R1: ./samples/03_1.fastq.gz
+  S03_R2: ./samples/03_2.fastq.gz
+  S04_R1: ./samples/04_1.fastq.gz
+  S04_R2: ./samples/04_2.fastq.gz
+  S05_R1: ./samples/05_1.fastq.gz
+  S05_R2: ./samples/05_2.fastq.gz
+  S06_R1: ./samples/06_1.fastq.gz
+  S06_R2: ./samples/06_2.fastq.gz
+  S07_R1: ./samples/07_1.fastq.gz
+  S07_R2: ./samples/07_2.fastq.gz
+  S08_R1: ./samples/08_1.fastq.gz
+  S08_R2: ./samples/08_2.fastq.gz
+  S09_R1: ./samples/09_1.fastq.gz
+  S09_R2: ./samples/09_2.fastq.gz
+  S10_R1: ./samples/10_1.fastq.gz
+  S10_R2: ./samples/10_2.fastq.gz
