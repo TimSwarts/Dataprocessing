@@ -1,7 +1,8 @@
-name: dataprocessing
+name: snake_fastGBS_venv
 channels:
   - bioconda
   - conda-forge
 dependencies:
   - python=3.11
   - snakemake=7.25.0
+  - bwa=0.7.17
