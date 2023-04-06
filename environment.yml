@@ -6,3 +6,4 @@ dependencies:
   - python=3.11
   - snakemake=7.25.0
   - bwa=0.7.17
+  - sabre=1.000
