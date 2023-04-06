@@ -3,40 +3,13 @@ configfile: "config/config.yml"
 
 # Global vaiables
 data_dir = config["data_dir"]
+samples_dir = config["samples_dir"]
 samples = config["samples"]
 genome = config["genome"]
 
 # Rules
-sample_names = [f"S{i:02d}" for i in range(1, 11)]
+include: "rules/map_reads.smk"
 
 rule all:
-    input:
-        expand("results/mapped_reads/{sample}.sam", sample=sample_names)
-
-rule bwa_mem:
-    input:
-        R1 = lambda wildcards: f"{data_dir}/{samples[wildcards.sample+'_R1']}",
-        R2 = lambda wildcards: f"{data_dir}/{samples[wildcards.sample+'_R2']}",
-        index_flag = "results/flags/genome_indexed"
-    output:
-        "results/mapped_reads/{sample}.sam"
-    params:
-        index_prefix=f"{data_dir}/"
-    shell:
-        "bwa mem -t 4 {params.index_prefix} {input.R1} {input.R2} > {output}"
-
-rule bwa_index:
-    input:
-        genome_file=genome
-    output:
-        index_flag = touch("results/flags/genome_indexed")
-    params:
-        index_prefix=f"{data_dir}/"
-    message:
-        "Indexing the genome"
-    shell:
-        """
-        if [ "$(ls {data_dir} | grep "{input.genome_file}" | wc -l)" -lt 6 ]; then
-            bwa index -p {params.index_prefix} {input.genome_file}
-        fi
-        """
+    input:  
+        expand("results/mapped_reads/{sample}.sam", sample=samples)
