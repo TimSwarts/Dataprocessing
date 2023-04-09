@@ -3,3 +3,5 @@ results_dir: /homes/tswarts/jaar3.5/Dataprocessing/eindopdracht/results
 genome: dummy_genome.fna
 barcode_file: barcodes.txt
 read_name: dummy_reads
+consider_already_trimmed: 50
+trim_galore_min_length: 0
