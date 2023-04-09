@@ -1,9 +1,8 @@
 rule bwa_mem:
     input:
-        R1 = "results/demultiplexed/{sample}_R1.fastq",
-        R2 = "results/demultiplexed/{sample}_R2.fastq",
-        index_flag = "results/flags/genome_indexed",
-        demultiplex_flag = "results/flags/demultiplexed_done"
+        R1 = f"{results_dir}/trimmed/{{sample}}_R1.fastq",
+        R2 = f"{results_dir}/trimmed/{{sample}}_R2.fastq",
+        index_flag = "results/flags/genome_indexed"
     output:
         "results/mapped_reads/{sample}.sam"
     log:
@@ -13,17 +12,19 @@ rule bwa_mem:
     shell:
         """
         (
-        bwa mem -t4 {params.index_prefix} {input.R1} {input.R2} > '{output}'
+        bwa mem -t4 {params.index_prefix} {input.R1} {input.R2} | 
+        samtools view -bS - > {output}
         ) > {log} 2>&1
         """
+
 
 rule bwa_index:
     input:
         genome_file=data_dir + "/" + genome
     output:
         index_flag = touch("results/flags/genome_indexed")
-    # log:
-    #     "logs/bwa_index.log"
+    log:
+        "logs/bwa_index.log"
     message: 
         "Indexing the genome"
     shell:
