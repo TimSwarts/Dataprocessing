@@ -24,7 +24,10 @@ def get_sample_names():
 include: "rules/demultiplex.smk"
 include: "rules/adapter_trimming.smk"
 include: "rules/map_reads.smk"
+include: "rules/variant_calling.smk"
+include: "rules/plot_variants.smk"
 
 rule all:
     input:  
-        expand("results/mapped_reads/{sample}.sam", sample=get_sample_names())
+       "results/variants.vcf",
+       "results/variants_scatterplot.png"

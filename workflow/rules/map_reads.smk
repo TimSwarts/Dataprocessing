@@ -4,7 +4,7 @@ rule bwa_mem:
         R2 = f"{results_dir}/trimmed/{{sample}}_R2.fastq",
         index_flag = "results/flags/genome_indexed"
     output:
-        "results/mapped_reads/{sample}.sam"
+        "results/mapped_reads/{sample}.bam"
     log:
         "logs/bwa_mem/{sample}.log"
     params:
