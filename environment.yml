@@ -3,7 +3,9 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.10.8
   - snakemake=7.25.0
   - bwa=0.7.17
   - sabre=1.000
+  - trim-galore=0.6.10
+  - samtools=1.17
