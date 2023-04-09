@@ -3,13 +3,36 @@ configfile: "config/config.yml"
 
 # Global vaiables
 data_dir = config["data_dir"]
-samples_dir = config["samples_dir"]
-samples = config["samples"]
+results_dir = config["results_dir"]
+read_name = config["read_name"]
+barcode_file = config["barcode_file"]
 genome = config["genome"]
 
+
+# Functions
+def get_demultiplexed_file_paths(read):
+    # Open barcode file
+    with open(f"{data_dir}/barcodes.txt", "r") as barcode_file:
+        demultiplexed =  [f"results/demultiplexed/{line.strip().split(' ')[read]}" for line in barcode_file]
+        demultiplexed.append(f"results/demultiplexed/unknown_sample_R{read}.fastq")
+    # Extract and return file names
+    return demultiplexed
+
+
+def get_sample_names():
+    sample_names = ["unkown_sample"]
+    # Open barcode file
+    with open(f"{data_dir}/barcodes.txt", "r") as barcode_file:
+        for line in barcode_file:
+            split_line = line.strip().split(" ")  # Add .strip() to remove line breaks, split on space
+            sample_names.append(split_line[1].split("_R")[0])  # Positions 1 contains sample name
+    return sample_names
+
+
 # Rules
+include: "rules/demultiplex.smk"
 include: "rules/map_reads.smk"
 
 rule all:
     input:  
-        expand("results/mapped_reads/{sample}.sam", sample=samples)
+        expand("results/mapped_reads/{sample}.sam", sample=get_sample_names())

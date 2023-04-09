@@ -1,8 +1,9 @@
 rule bwa_mem:
     input:
-        R1 = f"{data_dir}/{samples_dir}/{{sample}}_pass_1.fastq.gz",
-        R2 = f"{data_dir}/{samples_dir}/{{sample}}_pass_2.fastq.gz",
-        index_flag = "results/flags/genome_indexed"
+        R1 = "results/demultiplexed/{sample}_R1.fastq",
+        R2 = "results/demultiplexed/{sample}_R2.fastq",
+        index_flag = "results/flags/genome_indexed",
+        demultiplex_flag = "results/flags/demultiplexed_done"
     output:
         "results/mapped_reads/{sample}.sam"
     log:
@@ -21,8 +22,8 @@ rule bwa_index:
         genome_file=data_dir + "/" + genome
     output:
         index_flag = touch("results/flags/genome_indexed")
-    log:
-        "logs/bwa_index.log"
+    # log:
+    #     "logs/bwa_index.log"
     message: 
         "Indexing the genome"
     shell:
