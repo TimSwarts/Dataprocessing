@@ -9,3 +9,5 @@ dependencies:
   - sabre=1.000
   - trim-galore=0.6.10
   - samtools=1.17
+  - r-base=4.0.3
+  - r-ggplot2
