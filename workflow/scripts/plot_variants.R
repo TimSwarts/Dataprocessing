@@ -1,40 +1,21 @@
-# plot_variants.R
+# Load the required R packages
 library(ggplot2)
 
+# Get command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 vcf_file <- args[1]
 output_file <- args[2]
 
-# Read VCF file and extract quality scores
-extract_quality_scores <- function(vcf_file) {
-  qual_scores <- c()
-  con <- file(vcf_file, "r")
-  while (TRUE) {
-    line <- readLines(con, n = 1)
-    if (length(line) == 0) {
-      break
-    }
-    if (substring(line, 1, 1) != "#") {
-      fields <- strsplit(line, "\t")[[1]]
-      qual_scores <- c(qual_scores, as.numeric(fields[6]))
-    }
-  }
-  close(con)
-  return(qual_scores)
-}
+# Read the VCF file
+data <- read.table(vcf_file, header = FALSE, comment.char = "#", stringsAsFactors = FALSE)
 
-qual_scores <- extract_quality_scores(vcf_file)
+# Set columnames to standard VCF format
+colnames(data) <- c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO")
 
-# Create data frame for ggplot
-qual_scores_df <- data.frame(QualityScore = qual_scores)
-
-# Generate scatterplot using ggplot2
-scatterplot <- ggplot(qual_scores_df, aes(x = seq_along(QualityScore), y = QualityScore)) +
+# Create a scatter plot of the quality scores of the variant calls
+plot <- ggplot(data, aes(x = 1:length(QUAL), y = QUAL)) +
   geom_point() +
-  labs(title = "Scatterplot of Variant Calling Quality Scores",
+  labs(title = "Quality Scores Scatterplot",
        x = "Variant Index",
-       y = "Quality Score") +
-  theme_minimal()
-
-# Save scatterplot to file
-ggsave(filename = output_file, plot = scatterplot, width = 10, height = 6, dpi = 300)
+       y = "Quality Score")
+ggsave(output_file, plot)
